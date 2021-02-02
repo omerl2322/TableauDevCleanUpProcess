@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20203.20.0918.1727                               -->
+<workbook original-version='18.1' source-build='2020.1.5 (20201.20.0614.2321)' source-platform='win' version='18.1' xml:base='https://reports-dev.internal.outbrain.com' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <AutoCreateAndUpdateDSDPhoneLayouts />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <SheetIdentifierTracking />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <repository-location id='Testing-GrafanaEmbed' path='/workbooks' revision='1.0' />
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource caption='custom_sql_query (outbrain)' inline='true' name='federated.1famyju13l2wwz19o9dqi11wb3fd' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='verticaprdmain-research.outbrain.com' name='vertica.1bn0nkd0qtn1mi1h2o3pb0dp4xws'>
+            <connection authentication='auth-user-pass' class='vertica' dbname='db_outbrain' odbc-connect-string-extras='' odbc-native-protocol='' one-time-sql='' port='5433' schema='outbrain' server='verticaprdmain-research.outbrain.com' server-oauth='' username='tableau_ba' workgroup-auth-mode='prompt' />
+          </named-connection>
+        </named-connections>
+        <relation connection='vertica.1bn0nkd0qtn1mi1h2o3pb0dp4xws' name='custom_sql_query' type='text'>SELECT&#13;
+    date(facm_est_stats_date) stats_date,&#13;
+    sum(facm_gross_revenue) revenue&#13;
+FROM&#13;
+    facm_campaign_traffic_d&#13;
+WHERE&#13;
+    facm_est_stats_date &gt;&gt;= current_date - 7&#13;
+GROUP BY&#13;
+    1</relation>
+        <metadata-records>
+          <metadata-record class='column'>
+            <remote-name>stats_date</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[stats_date]</local-name>
+            <parent-name>[custom_sql_query]</parent-name>
+            <remote-alias>stats_date</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_TYPE_DATE&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_TYPE_DATE&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>revenue</remote-name>
+            <remote-type>131</remote-type>
+            <local-name>[revenue]</local-name>
+            <parent-name>[custom_sql_query]</parent-name>
+            <remote-alias>revenue</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>18</precision>
+            <scale>8</scale>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_NUMERIC&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_NUMERIC&quot;</attribute>
+            </attributes>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <layout dim-ordering='alphabetic' dim-percentage='0.487406' measure-ordering='alphabetic' measure-percentage='0.512594' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Revenue'>
+      <repository-location id='Revenue' path='/workbooks/Testing-GrafanaEmbed' revision='' />
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Live Vertica - Global Revenue</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='custom_sql_query (outbrain)' name='federated.1famyju13l2wwz19o9dqi11wb3fd' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1famyju13l2wwz19o9dqi11wb3fd'>
+            <column datatype='real' name='[revenue]' role='measure' type='quantitative' />
+            <column datatype='date' name='[stats_date]' role='dimension' type='ordinal' />
+            <column-instance column='[revenue]' derivation='Sum' name='[sum:revenue:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[stats_date]' derivation='Day-Trunc' name='[tdy:stats_date:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.1famyju13l2wwz19o9dqi11wb3fd].[tdy:stats_date:qk]' scope='cols' value='' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='[federated.1famyju13l2wwz19o9dqi11wb3fd].[sum:revenue:qk]' value='c&quot;$&quot;#,##0.00;(&quot;$&quot;#,##0.00)' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='text-format' field='[federated.1famyju13l2wwz19o9dqi11wb3fd].[sum:revenue:qk]' value='c&quot;$&quot;#,##0;(&quot;$&quot;#,##0)' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>[federated.1famyju13l2wwz19o9dqi11wb3fd].[sum:revenue:qk]</rows>
+        <cols>[federated.1famyju13l2wwz19o9dqi11wb3fd].[tdy:stats_date:qk]</cols>
+      </table>
+      <simple-id uuid='{96744625-6946-4190-9395-89A9B369A894}' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Dashboard 1'>
+      <repository-location id='Dashboard1' path='/workbooks/Testing-GrafanaEmbed' revision='' />
+      <style />
+      <size sizing-mode='automatic' />
+      <zones>
+        <zone h='100000' id='4' type='layout-basic' w='100000' x='0' y='0'>
+          <zone h='21681' id='3' name='Revenue' w='49532' x='50000' y='885'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='' h='76549' id='5' param='https://grafana.zemanta.com/d/2clbQoRH714/samsung-performance?from=1602608356972&amp;orgId=1&amp;refresh=5m&amp;to=1602782899203' type='web' w='99064' x='468' y='22566'>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone forceUpdate='true' h='21681' id='6' type='text' w='49532' x='468' y='885'>
+            <formatted-text>
+              <run fontalignment='1' fontsize='36'>TESTING</run>
+              <run fontalignment='1'>
+To the right is a tableau view, live connected to Vertica. Below is to a Grafana link. It will require logging in for each user via Okta.</run>
+            </formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='4' />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='700' minheight='700' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='8' type='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98230' id='7' param='vert' type='layout-flow' w='99064' x='468' y='885'>
+                <zone forceUpdate='true' h='21681' id='6' type='text' w='49532' x='468' y='885'>
+                  <formatted-text>
+                    <run fontalignment='1' fontsize='36'>TESTING</run>
+                    <run fontalignment='1'>
+To the right is a tableau view, live connected to Vertica. Below is to a Grafana link. It will require logging in for each user via Okta.</run>
+                  </formatted-text>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='166' h='21681' id='3' is-fixed='true' name='Revenue' w='49532' x='50000' y='885'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' forceUpdate='' h='76549' id='5' is-fixed='true' param='https://grafana.zemanta.com/d/2clbQoRH714/samsung-performance?from=1602608356972&amp;orgId=1&amp;refresh=5m&amp;to=1602782899203' type='web' w='99064' x='468' y='22566'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{B2B79202-B8BB-451F-9B3F-2FFFE4A24BCD}' />
+    </dashboard>
+  </dashboards>
+  <windows source-height='30'>
+    <window class='worksheet' name='Revenue'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1famyju13l2wwz19o9dqi11wb3fd].[yr:stats_date:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{DE82B260-7397-48D5-85D2-8263D864F3C4}' />
+    </window>
+    <window class='dashboard' maximized='true' name='Dashboard 1'>
+      <viewpoints>
+        <viewpoint name='Revenue'>
+          <zoom type='entire-view' />
+        </viewpoint>
+      </viewpoints>
+      <active id='-1' />
+      <simple-id uuid='{4E9D1234-998D-4F3F-860F-4F46D4C55169}' />
+    </window>
+  </windows>
+</workbook>

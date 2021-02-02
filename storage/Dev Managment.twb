@@ -1,0 +1,1150 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20192.19.0917.1648                               -->
+<workbook source-build='2019.2.4 (20192.19.0917.1648)' source-platform='mac' version='18.1' xml:base='https://reports-dev.internal.outbrain.com' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <AutoCreateAndUpdateDSDPhoneLayouts ignorable='true' predowngraded='true' />
+    <SheetIdentifierTracking ignorable='true' predowngraded='true' />
+    <SortTagCleanup />
+    <WindowsPersistSimpleIdentifiers />
+    <ZoneBackgroundTransparency />
+  </document-format-change-manifest>
+  <repository-location derived-from='https://reports-dev.internal.outbrain.com/workbooks/DevManagment?rev=1.0' id='DevManagment' path='/workbooks' revision='1.1' />
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='Top Value' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='25'>
+        <calculation class='tableau' formula='25' />
+        <range max='100' min='1' />
+      </column>
+      <column alias='UTC' caption='Time Zone' datatype='integer' datatype-customized='true' name='[Parameter 2]' param-domain-type='list' role='measure' type='quantitative' value='1'>
+        <calculation class='tableau' formula='1' />
+        <aliases>
+          <alias key='1' value='UTC' />
+          <alias key='2' value='IL' />
+          <alias key='3' value='EST' />
+        </aliases>
+        <members>
+          <member alias='UTC' value='1' />
+          <member alias='IL' value='2' />
+          <member alias='EST' value='3' />
+        </members>
+      </column>
+      <column alias='Yes' caption='Refresh Extract Status' datatype='string' name='[Status Parameter]' param-domain-type='list' role='measure' type='nominal' value='&quot;1&quot;'>
+        <calculation class='tableau' formula='&quot;1&quot;' />
+        <aliases>
+          <alias key='&quot;0&quot;' value='No' />
+          <alias key='&quot;1&quot;' value='Yes' />
+        </aliases>
+        <members>
+          <member alias='Yes' value='&quot;1&quot;' />
+          <member alias='No' value='&quot;0&quot;' />
+        </members>
+      </column>
+    </datasource>
+    <datasource caption='Avg time durations - extracts ' inline='true' name='federated.0z86ijb1y5tveq129kdnf0o8dn72' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='reports.internal.outbrain.com' name='postgres.0x7wbsy1yhqaik18nkcuf01v5r9i'>
+            <connection authentication='username-password' class='postgres' dbname='workgroup' odbc-native-protocol='' one-time-sql='' port='8060' server='reports-dev.internal.outbrain.com' server-oauth='' username='readonly' workgroup-auth-mode='prompt' />
+          </named-connection>
+        </named-connections>
+        <relation connection='postgres.0x7wbsy1yhqaik18nkcuf01v5r9i' name='Custom SQL Query' type='text'>select &#10;        Item_Name,&#10;        TRUNC(avg(DATE_PART(&apos;hour&apos;, COALESCE(Completed_At, Current_Datetime) - Started_At)*60 + DATE_PART(&apos;minute&apos;, COALESCE(Completed_At, Current_Datetime) - Started_At )))&#10;         as Avg_Job_Duration_Minutes,&#10;        TRUNC(avg(DATE_PART(&apos;hour&apos;, Started_At - Created_At)*60 + DATE_PART(&apos;minute&apos;, Started_At - Created_At)))&#10;         as Avg_Job_delays_Minutes&#10;                 &#10;from (&#10;SELECT&#10;    bkjob.id                  AS Job_Id ,&#10;    bkjob.job_name            AS Job_Name ,&#10;    bkjob.progress            AS Progress ,&#10;    bkjob.finish_code         AS Finish_Code ,&#10;    bkjob.priority            AS Priority ,&#10;    bkjob.notes               AS Notes ,&#10;    bkjob.created_at          AS Created_At ,&#10;    bkjob.started_at          AS Started_At ,&#10;    bkjob.completed_at        AS Completed_At,&#10;    bkjob.backgrounder_id     AS Backgrounder_Id,&#10;    bkjob.created_on_worker   AS Created_On_Worker ,&#10;    bkjob.processed_on_worker AS Processed_On_Worker ,&#10;    sch.name                  AS Schedule_Name ,&#10;    sch.schedule_type         AS Schedule_Type ,&#10;    sch.day_of_week_mask      AS Schedule_Day_of_Week_Mask ,&#10;    sch.day_of_month_mask     AS Schedule_Day_of_Month_Mask ,&#10;    sch.start_at_minute       AS Schedule_Start_At_Minute ,&#10;    sch.minute_interval       AS Schedule_Minute_Interval ,&#10;    sch.end_at_minute         AS Schedule_End_At_Minute ,&#10;    sch.end_schedule_at       AS Schedule_End_Schedule_At ,&#10;    sch.scheduled_action      AS Schedule_Action ,&#10;    sch.priority              AS Schedule_Priority ,&#10;    sch.active                AS Schedule_Active ,&#10;    CURRENT_TIMESTAMP         AS Current_Datetime ,&#10;    bkjob.site_id             AS Site_Id ,&#10;    s.name                    AS Site_Name ,&#10;    bkjob.subtitle            AS Item_Type ,&#10;    bkjob.item_id             AS Item_Id ,&#10;    bkjob.item_name           AS Item_Name ,&#10;    bkjob.repository_url      AS Item_Repository_Url ,&#10;    bkjob.project_id          AS Item_Project_Id ,&#10;    bkjob.owner_id            AS Item_Owner_Id ,&#10;    su_own.name               AS Item_Owner_Name ,&#10;    su_own.friendly_name      AS Item_Owner_Friendly_Name ,&#10;    su_own.email              AS Item_Owner_Email ,&#10;    p.name                    AS Project_Name&#10;FROM&#10;    (&#10;        SELECT&#10;            bj.id ,&#10;            bj.job_name ,&#10;            bj.progress ,&#10;            bj.finish_code ,&#10;            bj.priority ,&#10;            bj.notes ,&#10;            bj.created_at ,&#10;            bj.started_at ,&#10;            bj.completed_at ,&#10;            bj.site_id ,&#10;            bj.subtitle ,&#10;            bj.backgrounder_id ,&#10;            bj.created_on_worker ,&#10;            bj.processed_on_worker ,&#10;            bj.correlation_id ,&#10;            COALESCE(d.repository_url, w.repository_url) AS &quot;repository_url&quot; ,&#10;            COALESCE(d.project_id, w.project_id)         AS &quot;project_id&quot; ,&#10;            COALESCE(d.owner_id, w.owner_id)             AS &quot;owner_id&quot; ,&#10;            COALESCE(dc.id, w.id)                        AS &quot;item_id&quot; ,&#10;            COALESCE(d.name, w.name)                     AS &quot;item_name&quot;&#10;        FROM&#10;            background_jobs bj&#10;        LEFT JOIN&#10;            datasources d&#10;        ON&#10;            bj.title = d.name&#10;        AND bj.subtitle = &apos;Datasource&apos;&#10;        LEFT JOIN&#10;            data_connections dc&#10;        ON&#10;            d.id = dc.owner_id&#10;        AND dc.owner_type = &apos;Datasource&apos;&#10;        LEFT JOIN&#10;            workbooks w&#10;        ON&#10;            bj.title = w.name&#10;        AND bj.subtitle = &apos;Workbook&apos;&#10;        WHERE&#10;            bj.created_at&gt;&gt;=current_date - 7) AS bkjob&#10;LEFT JOIN&#10;    tasks t&#10;ON&#10;    bkjob.correlation_id = t.id&#10;LEFT JOIN&#10;    schedules sch&#10;ON&#10;    t.schedule_id = sch.id&#10;LEFT JOIN&#10;    sites s&#10;ON&#10;    bkjob.site_id = s.id&#10;LEFT JOIN&#10;    users u_own&#10;ON&#10;    bkjob.owner_id = u_own.id&#10;LEFT JOIN&#10;    system_users su_own&#10;ON&#10;    u_own.system_user_id = su_own.id&#10;LEFT JOIN&#10;    projects p&#10;ON&#10;    bkjob.project_id = p.id &#10;where bkjob.item_id is not null&#10;    ) temp1&#10;group by 1</relation>
+        <metadata-records>
+          <metadata-record class='column'>
+            <remote-name>item_name</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[item_name]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>item_name</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>255</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+              <attribute datatype='string' name='TypeIsVarchar'>&quot;true&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>avg_job_duration_minutes</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[avg_job_duration_minutes]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>avg_job_duration_minutes</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>8</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_FLOAT&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_DOUBLE&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>avg_job_delays_minutes</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[avg_job_delays_minutes]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>avg_job_delays_minutes</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>8</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_FLOAT&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_DOUBLE&quot;</attribute>
+            </attributes>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='string' name='[:Measure Names]' role='dimension' type='nominal'>
+        <aliases>
+          <alias key='&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72]&quot;' value='Avg job duration (minutes)' />
+        </aliases>
+      </column>
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column caption='Avg job delays minutes' datatype='real' name='[avg_job_delays_minutes]' role='measure' type='quantitative' />
+      <column caption='Avg job duration minutes' datatype='real' name='[avg_job_duration_minutes]' role='measure' type='quantitative' />
+      <column caption='Workbook Name' datatype='string' name='[item_name]' role='dimension' type='nominal' />
+      <column-instance column='[item_name]' derivation='None' name='[none:item_name:nk]' pivot='key' type='nominal' />
+      <column-instance column='[avg_job_delays_minutes]' derivation='Sum' name='[sum:avg_job_delays_minutes:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[avg_job_duration_minutes]' derivation='Sum' name='[sum:avg_job_duration_minutes:qk]' pivot='key' type='quantitative' />
+      <layout dim-ordering='alphabetic' dim-percentage='0.381395' measure-ordering='alphabetic' measure-percentage='0.380465' parameter-percentage='0.23814' show-structure='true' user-set-layout='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:item_name:nk]' type='palette'>
+            <map to='#499894'>
+              <bucket>&quot;Amplify analysis&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Audience Insight Dashboard  - Specific Marketer&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Bonus_Clicks_Dashboard&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Marketers Monthly&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;TabMon&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Demographic Benchmark&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;G&apos;antee Comps Repository - IL &amp; UK &amp; US &amp; DE &amp; FR &quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Geo Dashboard&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Smartfeed Dashboards&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Tier 5&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;CM Management Dashboard&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Digital Marketing&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Edit Mode - Spend by periods&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Engage Organic Traffic Transition&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Partner&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;PMI - Ligatus-Demand&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;CPC by Section - Benchmark Informed Recommendations_v4&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;International Mid-Market Dashboard&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;KPIO Internal A/B testing&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Sessions Report&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;BI Engineering Analysis - WFE - Daily ETL Performance&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Marketers Daily&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;OPA Dashboards&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Video - All Dashboards&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;_Amplify All Marketers List&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Ads.txt dashboard&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Advertisers Performance New&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Fill Rates&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;PMI - Ligatus - Supply&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;_Amplify Blocking Alerts DIY&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;CM Managers - Amplify Dashboards - check&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Publisher Audience Analyzer&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Served vs requested&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;_Amplify Blocking Alerts All Offices&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;_Engage Publisher Dashboard&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Interest Profile&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Look alike models data&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;US Marketer Portfolio Dashboard - Table only&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;_Amplify Accounts Dashboard&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Ad/URL Blocking Report&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;PMI - Outbrain Demand&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Portal_landing_page_new&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Ad Review Monitoring &quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Amplify - Blocking Dashboard&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;APAC Daily&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;CRO Dashboard&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Intercom/Optimove - Pixel&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Audience and Budget Planning&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;BI Engineering Analysis Dashboard - WFE - NY Research&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;PCCE\\hics\\dima - Today data &quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;PMI - Outbrain Supply&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;_Amplify Account Manager Dashboard&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;_Amplify Find Ads&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Interest Targeting&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;SSP Reporting&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Traffic Monitoring&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;_Engage Top 100 Source Docs&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;CM Managers - Amplify Dashboards&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;PMI Marketer &quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Quality Score AM&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Amplify - New Businesses&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Audience Insight Dashboard  - Specific Campaign v2&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;CHEQ Fraud Detection Dashboard&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Deep Dive Generator Usage Report&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Reach Figures Dashboard&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;_Amplify_Sleeping Beauty&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;_Engage All Publishers List&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Conversions on Publishers&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;PMI Quarter Overview&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Smartfeed Dashboards (incl PMI filter)&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Consumed Budgets&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Conversions on Publishers for Clement&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Management Dashboard 16core with permissions&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;MSN Monitoring Dashboard&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Trends Sales Force&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;_Amplify_CPC_Projection_Dashboard&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;AM Management Dashboard&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Management Dashboard&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Unique ads over time&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Video Dashboards&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;_Amplify Marketers &amp; Campaigns By Creation/Last Update Date&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;AUDIT - Articles by Interest and Publisher&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Management Dashboard - Deep analysis&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Marketer&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;MSN Central - WW Comparison&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Campaign Demographic Distribution and Performance&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Campaign Troubleshooting&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;GDPR Dashboard&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Sales Force Engage Dashboard&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;BI Engineering Analysis Dashboard - WFE - CHI Reseach&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Ligatus&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Marketer Demographic Distribution and Performance&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Quality Dashboards&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Yesterday AM Performance Summary Dashboard&quot;</bucket>
+            </map>
+          </encoding>
+          <encoding attr='color' field='[:Measure Names]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_delays_minutes:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_duration_minutes:qk]&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <date-options start-of-week='monday' />
+    </datasource>
+    <datasource caption='Extracts - flat data' inline='true' name='federated.0f4zcw71sidzyp10343f506o67va' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='reports.internal.outbrain.com' name='postgres.1xvy5h81yq5r7g1h3pilu11yk2i9'>
+            <connection authentication='username-password' class='postgres' dbname='workgroup' odbc-native-protocol='' one-time-sql='' port='8060' server='reports-dev.internal.outbrain.com' server-oauth='' username='readonly' workgroup-auth-mode='prompt' />
+          </named-connection>
+        </named-connections>
+        <relation connection='postgres.1xvy5h81yq5r7g1h3pilu11yk2i9' name='Custom SQL Query' type='text'>SELECT&#10;            &quot;Get Names&quot;.&quot;id&quot;                 AS &quot;id&quot;,&#10;            &quot;Get Names&quot;.&quot;created_at&quot;         AS &quot;created_at&quot;,&#10;            &quot;Get Names&quot;.&quot;owner_name&quot;         AS &quot;owner_name&quot;,&#10;            &quot;Get Names&quot;.&quot;domain&quot;             AS &quot;domain&quot;,&#10;            &quot;Get Names&quot;.&quot;project&quot;            AS &quot;project&quot;,&#10;            &quot;Get Names&quot;.&quot;name&quot;               AS &quot;name&quot;,&#10;            &quot;Get Names&quot;.&quot;size&quot;/1000000       AS &quot;size_MB&quot;,&#10;            CAST(&quot;Get Names&quot;.&quot;type&quot; AS TEXT) AS &quot;type&quot;&#10;        FROM&#10;            (&#10;            (&#10;                SELECT&#10;                    workbooks.id           AS id,&#10;                    workbooks.created_at   AS created_at,&#10;                    workbooks.owner_name   AS owner_name,&#10;                    workbooks.domain_name  AS domain,&#10;                    workbooks.project_name AS project,&#10;                    workbooks.project_id   AS project_id,&#10;                    workbooks.workbook_url AS url,&#10;                    workbooks.name,&#10;                    size,&#10;                    &apos;workbook&apos;          AS type,&#10;                    NULL                AS last_access_time,&#10;                    sites.name          AS site,&#10;                    sites.url_namespace AS site_id&#10;                FROM&#10;                    _workbooks workbooks,&#10;                    _sites sites&#10;                WHERE&#10;                    sites.id = workbooks.site_id )&#10;        UNION&#10;            (&#10;                SELECT&#10;                    datasources.id             AS id,&#10;                    datasources.created_at     AS created_at,&#10;                    datasources.owner_name     AS owner_name,&#10;                    datasources.domain_name    AS domain,&#10;                    datasources.project_name   AS project,&#10;                    datasources.project_id     AS project_id,&#10;                    datasources.datasource_url AS url,&#10;                    datasources.name,&#10;                    size,&#10;                    &apos;datasource&apos; AS type,&#10;                    last_access_time,&#10;                    sites.name          AS site,&#10;                    sites.url_namespace AS site_id&#10;                FROM&#10;                    _datasources datasources,&#10;                    _sites sites,&#10;                    _datasources_stats datasources_stats&#10;                WHERE&#10;                    sites.id = datasources.site_id&#10;                AND datasources.id = datasources_stats.datasource_id ) ) &quot;Get Names&quot;&#10;        LEFT JOIN&#10;            &quot;public&quot;.&quot;extracts&quot; &quot;Data Source Extracts&quot;&#10;        ON&#10;            (&#10;                &quot;Get Names&quot;.&quot;id&quot; = &quot;Data Source Extracts&quot;.&quot;datasource_id&quot;)&#10;        LEFT JOIN&#10;            &quot;public&quot;.&quot;extracts&quot; &quot;Workbook Extracts&quot;&#10;        ON&#10;            (&#10;                &quot;Get Names&quot;.&quot;id&quot; = &quot;Workbook Extracts&quot;.&quot;workbook_id&quot;)</relation>
+        <metadata-records>
+          <metadata-record class='column'>
+            <remote-name>id</remote-name>
+            <remote-type>3</remote-type>
+            <local-name>[id]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>id</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>4</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_INTEGER&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_SLONG&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>created_at</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[created_at]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>created_at</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_TYPE_TIMESTAMP&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_TYPE_TIMESTAMP&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>owner_name</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[owner_name]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>owner_name</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>255</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+              <attribute datatype='string' name='TypeIsVarchar'>&quot;true&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>domain</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[domain]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>domain</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>255</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+              <attribute datatype='string' name='TypeIsVarchar'>&quot;true&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>project</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[project]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>project</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>255</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+              <attribute datatype='string' name='TypeIsVarchar'>&quot;true&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>name</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[name]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>name</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>255</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+              <attribute datatype='string' name='TypeIsVarchar'>&quot;true&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>size_MB</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[size_MB]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>size_MB</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>20</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_BIGINT&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_SBIGINT&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>type</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[type]</local-name>
+            <parent-name>[Custom SQL Query]</parent-name>
+            <remote-alias>type</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <width>8190</width>
+            <contains-null>true</contains-null>
+            <cast-to-local-type>true</cast-to-local-type>
+            <collation flag='0' name='LEN_RUS' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;SQL_WLONGVARCHAR&quot;</attribute>
+              <attribute datatype='string' name='DebugWireType'>&quot;SQL_C_WCHAR&quot;</attribute>
+            </attributes>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column datatype='integer' name='[Number of Records]' role='measure' type='quantitative' user:auto-column='numrec'>
+        <calculation class='tableau' formula='1' />
+      </column>
+      <column caption='Created At' datatype='datetime' name='[created_at]' role='dimension' type='ordinal' />
+      <column caption='Workbook Name' datatype='string' name='[name]' role='dimension' type='nominal' />
+      <column caption='Owner' datatype='string' name='[owner_name]' role='dimension' type='nominal' />
+      <column caption='Project' datatype='string' name='[project]' role='dimension' type='nominal' />
+      <column caption='Size (MB)' datatype='integer' name='[size_MB]' role='measure' type='ordinal' />
+      <column-instance column='[name]' derivation='None' name='[none:name:nk]' pivot='key' type='nominal' />
+      <layout dim-ordering='alphabetic' dim-percentage='0.304186' measure-ordering='alphabetic' measure-percentage='0.355349' parameter-percentage='0.340465' show-structure='true' user-set-layout='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:name:nk]' type='palette'>
+            <map to='#499894'>
+              <bucket>&quot;Smartfeed Dashboards&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Yesterday AM Performance Summary Dashboard&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;AUDIT - Articles by Interest and Publisher&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;_Amplify Marketers &amp; Campaigns By Creation/Last Update Date&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Campaign Creative Analysis&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;_Engage Publisher Dashboard&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;KPIO v2 Adoption And Stats&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;OPA Dashboards&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;MSN Monitoring Dashboard&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Geo Dashboard&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;_Amplify Account Manager Dashboard&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Management Dashboard - Deep analysis&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;_Amplify Find Ads&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Quality Score AM&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Digital Marketing&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Video - All Dashboards&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;_Amplify Accounts Dashboard&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Sessions Report&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;_Amplify_Sleeping Beauty&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Trends Sales Force&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <date-options start-of-week='monday' />
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='AVG 7 days Extract duration time'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='11'>AVG 7 days extract duration time </run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Avg time durations - extracts ' name='federated.0z86ijb1y5tveq129kdnf0o8dn72' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0z86ijb1y5tveq129kdnf0o8dn72'>
+            <column caption='Avg job delays minutes' datatype='real' name='[avg_job_delays_minutes]' role='measure' type='quantitative' />
+            <column caption='Avg job duration minutes' datatype='real' name='[avg_job_duration_minutes]' role='measure' type='quantitative' />
+            <column caption='Workbook Name' datatype='string' name='[item_name]' role='dimension' type='nominal' />
+            <column-instance column='[item_name]' derivation='None' name='[none:item_name:nk]' pivot='key' type='nominal' />
+            <column-instance column='[avg_job_delays_minutes]' derivation='Sum' name='[sum:avg_job_delays_minutes:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[avg_job_duration_minutes]' derivation='Sum' name='[sum:avg_job_duration_minutes:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]'>
+            <groupfilter function='union' user:op='manual'>
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_duration_minutes:qk]&quot;' />
+              <groupfilter function='member' level='[:Measure Names]' member='&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_delays_minutes:qk]&quot;' />
+            </groupfilter>
+          </filter>
+          <manual-sort column='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' direction='ASC'>
+            <dictionary>
+              <bucket>&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_duration_minutes:qk]&quot;</bucket>
+              <bucket>&quot;[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_delays_minutes:qk]&quot;</bucket>
+            </dictionary>
+          </manual-sort>
+          <filter class='categorical' column='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk]'>
+            <groupfilter function='level-members' level='[none:item_name:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <computed-sort column='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk]' direction='DESC' using='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[sum:avg_job_delays_minutes:qk]' />
+          <slices>
+            <column>[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]</column>
+            <column>[federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <format attr='title' class='0' field='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[Multiple Values]' scope='cols' value='Minutes' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='height' field='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' value='11' />
+          </style-rule>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk]' value='232' />
+          </style-rule>
+          <style-rule element='label'>
+            <format attr='display' field='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' value='false' />
+          </style-rule>
+          <style-rule element='refline'>
+            <format attr='stroke-color' id='refline0' value='#000000' />
+          </style-rule>
+          <style-rule element='legend-title-text'>
+            <format attr='color' field='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' value='Avg Job'>
+              <formatted-text>
+                <run fontsize='8'>Avg Job</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+          <style-rule element='quick-filter'>
+            <format attr='title' field='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk]' value='Workbook Name'>
+              <formatted-text>
+                <run fontsize='8'>Workbook Name</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Shape' />
+            <encodings>
+              <color column='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' />
+            </encodings>
+            <style>
+              <style-rule element='pane'>
+                <format attr='minheight' value='-1' />
+                <format attr='maxheight' value='-1' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk] / [federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names])</rows>
+        <cols>[federated.0z86ijb1y5tveq129kdnf0o8dn72].[Multiple Values]</cols>
+      </table>
+      <simple-id uuid='{6D2E9C6A-C79C-4CC5-AC3C-C2CB4654BD44}' />
+    </worksheet>
+    <worksheet name='Number of workbboks per project'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Number of workbboks per project</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Extracts - flat data' name='federated.0f4zcw71sidzyp10343f506o67va' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0f4zcw71sidzyp10343f506o67va'>
+            <column-instance column='[name]' derivation='Count' name='[cnt:name:qk]' pivot='key' type='quantitative' />
+            <column caption='Workbook Name' datatype='string' name='[name]' role='dimension' type='nominal' />
+            <column-instance column='[project]' derivation='None' name='[none:project:nk]' pivot='key' type='nominal' />
+            <column caption='Project' datatype='string' name='[project]' role='dimension' type='nominal' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0f4zcw71sidzyp10343f506o67va].[cnt:name:qk]</rows>
+        <cols>[federated.0f4zcw71sidzyp10343f506o67va].[none:project:nk]</cols>
+      </table>
+      <simple-id uuid='{898CD1DA-5497-4BE9-9152-EEC5C51FB44F}' />
+    </worksheet>
+    <worksheet name='Top 10 heavy workbooks'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='11'>Top &lt;</run>
+            <run bold='true' fontsize='11'>[Parameters].[Parameter 1]</run>
+            <run bold='true' fontsize='11'>&gt; heavy workbooks</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Extracts - flat data' name='federated.0f4zcw71sidzyp10343f506o67va' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Top Value' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='25'>
+              <calculation class='tableau' formula='25' />
+              <range max='100' min='1' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.0f4zcw71sidzyp10343f506o67va'>
+            <column caption='Workbook Name' datatype='string' name='[name]' role='dimension' type='nominal' />
+            <column-instance column='[name]' derivation='None' name='[none:name:nk]' pivot='key' type='nominal' />
+            <column-instance column='[owner_name]' derivation='None' name='[none:owner_name:nk]' pivot='key' type='nominal' />
+            <column caption='Owner' datatype='string' name='[owner_name]' role='dimension' type='nominal' />
+            <column caption='Size (MB)' datatype='integer' name='[size_MB]' role='measure' type='ordinal' />
+            <column-instance column='[size_MB]' derivation='Sum' name='[sum:size_MB:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[size_MB]' derivation='Sum' name='[sum:size_MB:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]'>
+            <groupfilter count='[Parameters].[Parameter 1]' end='top' function='end' units='records' user:ui-marker='end' user:ui-top-by-field='true'>
+              <groupfilter direction='DESC' expression='SUM([size_MB])' function='order' user:ui-marker='order'>
+                <groupfilter function='level-members' level='[none:name:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+              </groupfilter>
+            </groupfilter>
+          </filter>
+          <computed-sort column='[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]' direction='DESC' using='[federated.0f4zcw71sidzyp10343f506o67va].[sum:size_MB:ok]' />
+          <slices>
+            <column>[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='header'>
+            <format attr='width' field='[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]' value='232' />
+          </style-rule>
+          <style-rule element='field-labels-decoration'>
+            <format attr='text-align' value='left' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <tooltip column='[federated.0f4zcw71sidzyp10343f506o67va].[sum:size_MB:ok]' />
+            </encodings>
+            <customized-tooltip>
+              <formatted-text>
+                <run fontcolor='#787878'>Workbook Name:&#9;</run>
+                <run bold='true'>&lt;[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]&gt;</run>
+                <run>Æ&#10;</run>
+                <run fontcolor='#787878'>Size (MB):&#9;</run>
+                <run bold='true'>&lt;[federated.0f4zcw71sidzyp10343f506o67va].[sum:size_MB:ok]&gt;</run>
+                <run>Æ&#10;</run>
+              </formatted-text>
+            </customized-tooltip>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-color' value='#e15759' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk] / [federated.0f4zcw71sidzyp10343f506o67va].[none:owner_name:nk])</rows>
+        <cols>[federated.0f4zcw71sidzyp10343f506o67va].[sum:size_MB:qk]</cols>
+      </table>
+      <simple-id uuid='{23F3EC42-AB6B-4A96-A012-46CAC3C60FBE}' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Dev Managment'>
+      <repository-location id='DevManagment' path='/workbooks/DevManagment' revision='' />
+      <style />
+      <size maxheight='1181' maxwidth='2276' minheight='1181' minwidth='2276' sizing-mode='fixed' />
+      <datasources>
+        <datasource name='Parameters' />
+      </datasources>
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Top Value' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='25'>
+          <calculation class='tableau' formula='25' />
+          <range max='100' min='1' />
+        </column>
+      </datasource-dependencies>
+      <zones>
+        <zone h='100000' id='4' type='layout-basic' w='100000' x='0' y='0'>
+          <zone h='98646' id='3' layout-strategy-id='distribute-evenly' param='horz' type='layout-flow' w='99298' x='351' y='677'>
+            <zone h='98646' id='11' layout-strategy-id='distribute-evenly' param='vert' type='layout-flow' w='49649' x='351' y='677'>
+              <zone h='49365' id='9' name='Top 10 heavy workbooks' w='49649' x='351' y='677'>
+                <layout-cache fixed-size-h='391' minwidth='332' type-h='fixed' type-w='scalable' />
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+              <zone h='49281' id='12' name='Number of workbboks per project' w='49649' x='351' y='50042'>
+                <layout-cache minheight='203' type-h='scalable' type-w='cell' />
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+            <zone h='98646' id='13' param='vert' type='layout-flow' w='49649' x='50000' y='677'>
+              <zone h='6351' id='14' layout-strategy-id='distribute-evenly' param='horz' type='layout-flow' w='49649' x='50000' y='677'>
+                <zone h='6351' id='10' mode='slider' param='[Parameters].[Parameter 1]' type='paramctrl' w='12434' x='50000' y='677'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone h='6351' id='8' name='AVG 7 days Extract duration time' pane-specification-id='0' param='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' type='color' w='12434' x='62434' y='677'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone h='6351' id='16' type='empty' w='12390' x='74868' y='677'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+                <zone h='6351' id='15' type='empty' w='12391' x='87258' y='677'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone h='92295' id='5' name='AVG 7 days Extract duration time' w='49649' x='50000' y='7028'>
+                <layout-cache fixed-size-h='1476' minwidth='334' type-h='fixed' type-w='scalable' />
+                <zone-style>
+                  <format attr='border-color' value='#000000' />
+                  <format attr='border-style' value='none' />
+                  <format attr='border-width' value='0' />
+                  <format attr='margin' value='4' />
+                </zone-style>
+              </zone>
+            </zone>
+          </zone>
+          <zone-style>
+            <format attr='border-color' value='#000000' />
+            <format attr='border-style' value='none' />
+            <format attr='border-width' value='0' />
+            <format attr='margin' value='8' />
+          </zone-style>
+        </zone>
+      </zones>
+      <devicelayouts>
+        <devicelayout auto-generated='true' name='Phone'>
+          <size maxheight='1000' minheight='1000' sizing-mode='vscroll' />
+          <zones>
+            <zone h='100000' id='19' type='layout-basic' w='100000' x='0' y='0'>
+              <zone h='98646' id='20' param='vert' type='layout-flow' w='99298' x='351' y='677'>
+                <zone fixed-size='280' h='49365' id='9' is-fixed='true' name='Top 10 heavy workbooks' w='49649' x='351' y='677'>
+                  <layout-cache fixed-size-h='391' minwidth='332' type-h='fixed' type-w='scalable' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='6351' id='10' mode='slider' param='[Parameters].[Parameter 1]' type='paramctrl' w='12434' x='50000' y='677'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' h='92295' id='5' is-fixed='true' name='AVG 7 days Extract duration time' w='49649' x='50000' y='7028'>
+                  <layout-cache fixed-size-h='1476' minwidth='334' type-h='fixed' type-w='scalable' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone h='6351' id='8' name='AVG 7 days Extract duration time' pane-specification-id='0' param='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' type='color' w='12434' x='62434' y='677'>
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+                <zone fixed-size='280' h='49281' id='12' is-fixed='true' name='Number of workbboks per project' w='49649' x='351' y='50042'>
+                  <layout-cache minheight='203' type-h='scalable' type-w='cell' />
+                  <zone-style>
+                    <format attr='border-color' value='#000000' />
+                    <format attr='border-style' value='none' />
+                    <format attr='border-width' value='0' />
+                    <format attr='margin' value='4' />
+                    <format attr='padding' value='0' />
+                  </zone-style>
+                </zone>
+              </zone>
+              <zone-style>
+                <format attr='border-color' value='#000000' />
+                <format attr='border-style' value='none' />
+                <format attr='border-width' value='0' />
+                <format attr='margin' value='8' />
+              </zone-style>
+            </zone>
+          </zones>
+        </devicelayout>
+      </devicelayouts>
+      <simple-id uuid='{380FFB4D-C76A-4271-B499-4693750755CA}' />
+    </dashboard>
+  </dashboards>
+  <windows source-height='51'>
+    <window class='worksheet' name='AVG 7 days Extract duration time' tab-color='#a65200'>
+      <cards>
+        <edge name='left'>
+          <strip size='210'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+            <card type='measures' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.0z86ijb1y5tveq129kdnf0o8dn72].[:Measure Names]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0z86ijb1y5tveq129kdnf0o8dn72].[none:item_name:nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{1D3C3269-09A3-4E5F-B8DF-ADC6F8287131}' />
+    </window>
+    <window class='worksheet' name='Number of workbboks per project'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]</field>
+            <field>[federated.0f4zcw71sidzyp10343f506o67va].[none:project:nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{8DFE2615-29AE-4260-8821-A81B22A6094D}' />
+    </window>
+    <window class='worksheet' name='Top 10 heavy workbooks' tab-color='#6e597f'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='slider' param='[Parameters].[Parameter 1]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0f4zcw71sidzyp10343f506o67va].[none:name:nk]</field>
+            <field>[federated.0f4zcw71sidzyp10343f506o67va].[none:owner_name:nk]</field>
+            <field>[federated.0f4zcw71sidzyp10343f506o67va].[sum:size_MB:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{525F1794-AEDE-4CBF-AAC8-112E7CBB965E}' />
+    </window>
+    <window class='dashboard' maximized='true' name='Dev Managment'>
+      <viewpoints>
+        <viewpoint name='AVG 7 days Extract duration time' />
+        <viewpoint name='Number of workbboks per project'>
+          <zoom type='entire-view' />
+        </viewpoint>
+        <viewpoint name='Top 10 heavy workbooks' />
+      </viewpoints>
+      <active id='-1' />
+      <simple-id uuid='{F80DD01D-6B09-4C43-82A1-B239FE8B2676}' />
+    </window>
+  </windows>
+</workbook>
