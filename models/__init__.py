@@ -11,8 +11,8 @@ def get_tableau_dev_server_data(tableau_dev_link):
 
 # ------------------------------------------------------------------------------------------------
 def get_tableau_auth_data():
-    tableau_read_credentials = keyring.get_password("dev_server_cleanup_process", "tableau_read")
-    return TSC.TableauAuth('tableau_read', tableau_read_credentials, site_id='')
+    tableau_read_credentials = keyring.get_password("dev_server_cleanup_process", "XXX")
+    return TSC.TableauAuth('XXX', tableau_read_credentials, site_id='')
 
 
 # ------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ port = '8060'
 
 # ------------------------------------------------------------------------------------------------
 # newman api variables
-send_internal_email_post_command = 'http://nydc1-newman-prod-default.Newman.service.nydc1.consul:8080/Newman/api/sendInternalEmail'
+send_internal_email_post_command = 'XXX'
 alert_schedule_message_template = "cleaningTableauDevProcessTemplate"
 alert_delete_message_template = "cleaningTableauDevProcessTemplate1"
 # ------------------------------------------------------------------------------------------------
@@ -40,4 +40,4 @@ CLIENT_SECRET_FILE = 'files/google_drive_credentials.json'
 API_NAME = 'drive'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/drive']
-shared_folder_id = '1_55s_kBsiJW4QkgNgTuIH4gr1YxPHGIz'
+shared_folder_id = 'XXX'

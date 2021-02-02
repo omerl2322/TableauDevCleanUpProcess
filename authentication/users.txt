@@ -1,3 +1,3 @@
-readonly
-tableau_dev_url
-tableau_read
+XXX
+XXX
+XXX
